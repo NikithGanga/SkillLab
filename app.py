@@ -78,7 +78,7 @@ def analyze():
                 # Replace with actual recipient
                 recipients=['nikithganga123@gmail.com'],
                 body=f"Stock Analysis Alert:\n\n"
-                f"The stock {ticker} has been analyzed with a risk level of 'Low'.\n"
+                f"The stock {ticker} has been analyzed with a risk level of 'High'.\n"
                 f"Details:\n"
                 f"Current Price: ${data['Close'].iloc[-1]:.2f}\n"
                 f"Volatility: {data['Volatility'].iloc[-1]*100:.2f}%\n"
