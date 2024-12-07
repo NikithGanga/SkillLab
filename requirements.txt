@@ -28,3 +28,4 @@ ipykernel==6.29.3
 
 # Production deployment
 gunicorn==22.0.0
+flask_mail==0.10.0

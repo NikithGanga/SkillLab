@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify
 import yfinance as yf
 import pandas as pd
 from save_load_model import load_model
@@ -6,8 +6,22 @@ from data_collection import get_stock_data
 from data_preprocessing import preprocess_data
 from feature_engineering import add_features
 from labeling import label_risk
+from flask_mail import Mail, Message
+import traceback
+import logging
 
 app = Flask(__name__)
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'tle.nikith123@gmail.com'
+# Your app password without spaces
+app.config['MAIL_PASSWORD'] = 'reeq kelp sspw vkhu'
+app.config['MAIL_DEFAULT_SENDER'] = ('Nikith', 'tle.nikith123@gmail.com')
+
+mail = Mail(app)
 
 
 @app.route('/')
@@ -40,9 +54,37 @@ def analyze():
         if not isinstance(data.index, pd.DatetimeIndex):
             data.index = pd.to_datetime(data.index)
 
-        # Format dates for the chart
         dates = [d.strftime('%Y-%m-%d') for d in data.index[-30:]]
         prices = data['Close'].tail(30).tolist()
+
+        # Send email if the risk level is low
+        if risk_level.lower() == 'low' or risk_level.lower() == 'medium':
+            send_email(
+                subject=f"Low Risk Alert for {ticker}",
+                # Replace with actual recipient
+                recipients=['nikithganga123@gmail.com'],
+                body=f"Stock Analysis Alert:\n\n"
+                f"The stock {ticker} has been analyzed with a risk level of 'Low'.\n"
+                f"Details:\n"
+                f"Current Price: ${data['Close'].iloc[-1]:.2f}\n"
+                f"Volatility: {data['Volatility'].iloc[-1]*100:.2f}%\n"
+                f"Daily Return: {data['Daily Return'].iloc[-1]*100:.2f}%\n"
+                f"Stay informed and take action as needed."
+            )
+
+        if risk_level.lower() == 'high':
+            send_email(
+                subject=f"Low Risk Alert for {ticker} and Sell Alert",
+                # Replace with actual recipient
+                recipients=['nikithganga123@gmail.com'],
+                body=f"Stock Analysis Alert:\n\n"
+                f"The stock {ticker} has been analyzed with a risk level of 'Low'.\n"
+                f"Details:\n"
+                f"Current Price: ${data['Close'].iloc[-1]:.2f}\n"
+                f"Volatility: {data['Volatility'].iloc[-1]*100:.2f}%\n"
+                f"Daily Return: {data['Daily Return'].iloc[-1]*100:.2f}%\n"
+                f"Stay informed and take action as needed."
+            )
 
         return jsonify({
             'risk_level': risk_level,
@@ -53,11 +95,19 @@ def analyze():
             'prices': prices
         })
     except Exception as e:
-        import traceback
-        import logging
         # Log the full error on the server
         logging.error(traceback.format_exc())
         return jsonify({'error': 'An internal error has occurred.'}), 400
+
+
+def send_email(subject, recipients, body):
+    """Send an email with Flask-Mail."""
+    try:
+        msg = Message(subject, recipients=recipients, body=body)
+        mail.send(msg)
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
 
 
 @app.route('/api/analyze/<ticker>', methods=['GET'])
@@ -97,8 +147,6 @@ def analyze_api(ticker):
 
         return jsonify(response)
     except Exception as e:
-        import traceback
-        import logging
         # Log the full error on the server
         logging.error(traceback.format_exc())
         return jsonify({
