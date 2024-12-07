@@ -1,14 +1,17 @@
+import os
+import logging
+import traceback
+from flask_mail import Mail, Message
+from labeling import label_risk
+from feature_engineering import add_features
+from data_preprocessing import preprocess_data
+from data_collection import get_stock_data
+from save_load_model import load_model
 from flask import Flask, render_template, request, jsonify
 import yfinance as yf
 import pandas as pd
-from save_load_model import load_model
-from data_collection import get_stock_data
-from data_preprocessing import preprocess_data
-from feature_engineering import add_features
-from labeling import label_risk
-from flask_mail import Mail, Message
-import traceback
-import logging
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -16,10 +19,10 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'tle.nikith123@gmail.com'
+app.config['MAIL_USERNAME'] = os.getenv("TO_MAIL")
 # Your app password without spaces
-app.config['MAIL_PASSWORD'] = 'reeq kelp sspw vkhu'
-app.config['MAIL_DEFAULT_SENDER'] = ('Nikith', 'tle.nikith123@gmail.com')
+app.config['MAIL_PASSWORD'] = os.getenv("PASSWORD")
+app.config['MAIL_DEFAULT_SENDER'] = ('Nikith', os.getenv("TO_MAIL"))
 
 mail = Mail(app)
 

@@ -1,3 +1,9 @@
 venv
 .idea
 .DS_Store
+instance/*
+!instance/.gitignore
+.webassets-cache
+.env
+
+# End of https://mrkandreev.name/snippets/gitignore-generator/#Flask
