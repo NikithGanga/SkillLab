@@ -9,9 +9,11 @@ from labeling import label_risk
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -53,8 +55,10 @@ def analyze():
     except Exception as e:
         import traceback
         import logging
-        logging.error(traceback.format_exc())  # Log the full error on the server
+        # Log the full error on the server
+        logging.error(traceback.format_exc())
         return jsonify({'error': 'An internal error has occurred.'}), 400
+
 
 @app.route('/api/analyze/<ticker>', methods=['GET'])
 def analyze_api(ticker):
@@ -95,11 +99,13 @@ def analyze_api(ticker):
     except Exception as e:
         import traceback
         import logging
-        logging.error(traceback.format_exc())  # Log the full error on the server
+        # Log the full error on the server
+        logging.error(traceback.format_exc())
         return jsonify({
             'error': 'An internal error has occurred.',
             'ticker': ticker.upper()
         }), 400
+
 
 if __name__ == '__main__':
     app.run(debug=True)
