@@ -72,6 +72,20 @@ def analyze():
                 f"Stay informed and take action as needed."
             )
 
+        if risk_level.lower() == 'high':
+            send_email(
+                subject=f"Low Risk Alert for {ticker} and Sell Alert",
+                # Replace with actual recipient
+                recipients=['nikithganga123@gmail.com'],
+                body=f"Stock Analysis Alert:\n\n"
+                f"The stock {ticker} has been analyzed with a risk level of 'Low'.\n"
+                f"Details:\n"
+                f"Current Price: ${data['Close'].iloc[-1]:.2f}\n"
+                f"Volatility: {data['Volatility'].iloc[-1]*100:.2f}%\n"
+                f"Daily Return: {data['Daily Return'].iloc[-1]*100:.2f}%\n"
+                f"Stay informed and take action as needed."
+            )
+
         return jsonify({
             'risk_level': risk_level,
             'current_price': f"{data['Close'].iloc[-1]:.2f}",
