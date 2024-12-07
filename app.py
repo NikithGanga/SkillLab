@@ -12,15 +12,14 @@ import logging
 
 app = Flask(__name__)
 
-# Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
+app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'tle.nikith123@example.com'  # Your email address
-app.config['MAIL_PASSWORD'] = 'Nikith@123'          # Your email password
-# app.config['MAIL_DEFAULT_SENDER'] = 'your_email@example.com'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'tle.nikith123@gmail.com'
+# Your app password without spaces
+app.config['MAIL_PASSWORD'] = 'reeq kelp sspw vkhu'
+app.config['MAIL_DEFAULT_SENDER'] = ('Nikith', 'tle.nikith123@gmail.com')
 
 mail = Mail(app)
 
@@ -59,18 +58,18 @@ def analyze():
         prices = data['Close'].tail(30).tolist()
 
         # Send email if the risk level is low
-        if risk_level.lower() == 'low':
+        if risk_level.lower() == 'low' or risk_level.lower() == 'medium':
             send_email(
                 subject=f"Low Risk Alert for {ticker}",
                 # Replace with actual recipient
                 recipients=['nikithganga123@gmail.com'],
                 body=f"Stock Analysis Alert:\n\n"
-                     f"The stock {ticker} has been analyzed with a risk level of 'Low'.\n"
-                     f"Details:\n"
-                     f"Current Price: ${data['Close'].iloc[-1]:.2f}\n"
-                     f"Volatility: {data['Volatility'].iloc[-1]*100:.2f}%\n"
-                     f"Daily Return: {data['Daily Return'].iloc[-1]*100:.2f}%\n"
-                     f"Stay informed and take action as needed."
+                f"The stock {ticker} has been analyzed with a risk level of 'Low'.\n"
+                f"Details:\n"
+                f"Current Price: ${data['Close'].iloc[-1]:.2f}\n"
+                f"Volatility: {data['Volatility'].iloc[-1]*100:.2f}%\n"
+                f"Daily Return: {data['Daily Return'].iloc[-1]*100:.2f}%\n"
+                f"Stay informed and take action as needed."
             )
 
         return jsonify({
