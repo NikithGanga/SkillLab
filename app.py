@@ -60,7 +60,7 @@ def analyze():
         # Send email if the risk level is low
         if risk_level.lower() == 'low' or risk_level.lower() == 'medium':
             send_email(
-                subject=f"Low Risk Alert for {ticker}",
+                subject=f"Low Risk Alert for {ticker} and Buy Alert",
                 # Replace with actual recipient
                 recipients=['nikithganga123@gmail.com'],
                 body=f"Stock Analysis Alert:\n\n"
@@ -74,7 +74,7 @@ def analyze():
 
         if risk_level.lower() == 'high':
             send_email(
-                subject=f"Low Risk Alert for {ticker} and Sell Alert",
+                subject=f"High Risk Alert for {ticker} and Sell Alert",
                 # Replace with actual recipient
                 recipients=['nikithganga123@gmail.com'],
                 body=f"Stock Analysis Alert:\n\n"
